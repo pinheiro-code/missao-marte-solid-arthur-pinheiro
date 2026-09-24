@@ -3,14 +3,20 @@
 
 # Diretorios de compilacao
 out/
+out-solid/
+out-test/
 bin/
 target/
-src/solid*
-src/exer*
+
+# As duas linhas abaixo estavam aqui e ignoravam src/solid* e src/exer*, ou seja,
+# o proprio codigo-fonte da entrega. Foram removidas porque a atividade pede que
+# src/exercicio10 (preservado) e src/solidexercicio10 (refatorado) sejam versionados.
 
 # Arquivos locais gerados pelo jogo
 ranking.json
 ranking-solid-exercicio10.json
+ranking-teste-temporario.json
+ranking-integracao-temporario.json
 
 # Configuracoes locais do VS Code
 .vscode/
