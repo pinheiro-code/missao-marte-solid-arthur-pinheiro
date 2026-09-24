@@ -1,0 +1,93 @@
+@startuml diagrama-pacotes
+' Diagrama de pacotes da versão refatorada
+' Missão Marte Unifor - solidexercicio10
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam package {
+  BackgroundColor #FDFDFD
+  BorderColor #3C4858
+}
+skinparam ArrowColor #3C4858
+
+package "solidexercicio10" as raiz {
+  class Main <<composition root>>
+}
+
+package "solidexercicio10.service" as service {
+  class JogoService
+  class PartidaService
+  class GeradorDeMissao
+}
+
+package "solidexercicio10.presentation" as presentation {
+  interface EntradaJogo
+  interface SaidaJogo
+  interface EntradaPartida
+  interface SaidaPartida
+  class ConsoleUI
+  class MapaRenderer
+}
+
+package "solidexercicio10.repository" as repository {
+  interface RankingRepository
+  class ArquivoRankingRepository
+  class MemoriaRankingRepository
+  class RankingEntry <<record>>
+}
+
+package "solidexercicio10.model" as model {
+  class Missao
+  class Nave
+  abstract class Passageiro
+  enum Dificuldade
+}
+
+' --- Dependências ---
+raiz --> service : instancia
+raiz --> presentation : instancia
+raiz --> repository : escolhe a implementação
+raiz --> model : monta o catálogo
+
+service --> model : regras sobre as entidades
+service ..> presentation : depende das interfaces\nde entrada e saída
+service ..> repository : depende de\nRankingRepository
+
+presentation --> model : desenha e exibe
+presentation ..> repository : usa RankingEntry\npara listar o ranking
+
+repository --> model : grava Dificuldade
+
+ConsoleUI ..|> EntradaJogo
+ConsoleUI ..|> SaidaJogo
+ConsoleUI ..|> EntradaPartida
+ConsoleUI ..|> SaidaPartida
+ConsoleUI --> MapaRenderer
+
+ArquivoRankingRepository ..|> RankingRepository
+MemoriaRankingRepository ..|> RankingRepository
+
+JogoService --> PartidaService
+PartidaService --> GeradorDeMissao
+
+note top of repository
+  **DIP**: o serviço enxerga apenas
+  RankingRepository. Quem escolhe entre
+  arquivo e memória é o Main, e trocar a
+  implementação não altera o serviço.
+end note
+
+note bottom of model
+  O modelo não depende de ninguém.
+  É a base do grafo, e por isso não
+  existe ciclo entre os pacotes.
+end note
+
+note right of raiz
+  **SRP**: Main só monta o grafo de
+  objetos e dispara o jogo. É o único
+  lugar onde classes concretas de
+  persistência e de console aparecem.
+end note
+
+@enduml

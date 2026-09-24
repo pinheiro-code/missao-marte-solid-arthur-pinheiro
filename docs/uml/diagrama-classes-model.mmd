@@ -1,0 +1,159 @@
+classDiagram
+    direction TB
+
+    class Posicionavel {
+        <<interface>>
+        +getX() int
+        +getY() int
+        +estaEm(int x, int y) boolean
+        +estaNaMesmaPosicaoDe(Posicionavel outro) boolean
+    }
+
+    class Movel {
+        <<interface>>
+        +mover(Direcao direcao, Limites limites) boolean
+    }
+
+    class FabricaPassageiro {
+        <<interface>>
+        +criar(int x, int y) Passageiro
+    }
+
+    class EntidadeMapa {
+        <<abstract>>
+        #int x
+        #int y
+        +getX() int
+        +getY() int
+        +getSimbolo()* char
+    }
+
+    class Passageiro {
+        <<abstract>>
+        -String nome
+        -String tipo
+        +getNome() String
+        +getTipo() String
+        +getPontuacao()* int
+    }
+
+    class Professor {
+        +getPontuacao() int
+        +getSimbolo() char
+    }
+
+    class Engenheiro {
+        +getPontuacao() int
+        +getSimbolo() char
+    }
+
+    class Astronauta {
+        +getPontuacao() int
+        +getSimbolo() char
+    }
+
+    class Asteroide {
+        +getSimbolo() char
+    }
+
+    class Inimigo {
+        +mover(Direcao, Limites) boolean
+        +moverAleatoriamente(Random, Limites) void
+        +getSimbolo() char
+    }
+
+    class Nave {
+        -String id
+        -int capacidade
+        -int vidas
+        +mover(Direcao, Limites) boolean
+        +embarcar(Passageiro) boolean
+        +perderVida() void
+        +estaDestruida() boolean
+        +getSimbolo() char
+    }
+
+    class Missao {
+        +PLATAFORMA_X int
+        +PLATAFORMA_Y int
+        +verificaColisao() boolean
+        +moverInimigos(Random) void
+        +passageiroNaPosicaoDaNave() Optional~Passageiro~
+        +embarcarPassageiroNaPosicaoDaNave() boolean
+        +todosEmbarcados() boolean
+        +naveNaPlataformaDePouso() boolean
+        +missaoCumprida() boolean
+    }
+
+    class Dificuldade {
+        <<enumeration>>
+        FACIL
+        MEDIO
+        DIFICIL
+        +getPontuacaoInicial() int
+        +getQuantidadePassageiros() int
+        +getQuantidadeAsteroides() int
+        +getQuantidadeInimigos() int
+        +deString(String) Dificuldade
+    }
+
+    class Direcao {
+        <<enumeration>>
+        CIMA
+        BAIXO
+        ESQUERDA
+        DIREITA
+        +deltaX() int
+        +deltaY() int
+        +doComando(char) Optional~Direcao~
+    }
+
+    class Limites {
+        <<record>>
+        +int minX
+        +int maxX
+        +int minY
+        +int maxY
+        +quadrado(int) Limites
+        +contem(int, int) boolean
+    }
+
+    class ResultadoPartida {
+        <<record>>
+        +String piloto
+        +int pontuacaoFinal
+        +int movimentos
+        +long tempoSegundos
+        +int passageirosResgatados
+        +boolean vitoria
+        +elegivelParaRanking() boolean
+    }
+
+    Posicionavel <|.. EntidadeMapa
+    Posicionavel <|-- Movel
+    Movel <|.. Nave
+    Movel <|.. Inimigo
+
+    EntidadeMapa <|-- Passageiro
+    EntidadeMapa <|-- Asteroide
+    EntidadeMapa <|-- Inimigo
+    EntidadeMapa <|-- Nave
+    Passageiro <|-- Professor
+    Passageiro <|-- Engenheiro
+    Passageiro <|-- Astronauta
+
+    Missao "1" *-- "1" Nave : pilotada por
+    Missao "1" o-- "0..*" Passageiro : na superficie
+    Missao "1" *-- "0..*" Asteroide : perigos
+    Missao "1" *-- "0..*" Inimigo : perigos
+    Missao "1" *-- "1" Limites : fronteiras
+    Nave "1" o-- "0..5" Passageiro : a bordo
+
+    Movel ..> Direcao : usa
+    Movel ..> Limites : valida com
+    FabricaPassageiro ..> Passageiro : cria
+    ResultadoPartida ..> Dificuldade : registra
+
+    note for Passageiro "LSP: classe abstrata, sem pontuacao padrao. Todo subtipo declara o proprio valor e pode substituir a base."
+    note for Movel "LSP e ISP: os limites do mapa estao na assinatura, entao nenhuma implementacao pode ignora-los."
+    note for Dificuldade "OCP: a configuracao da partida vive no enum. Uma dificuldade nova nao exige um switch novo."

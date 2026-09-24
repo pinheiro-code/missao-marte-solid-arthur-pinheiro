@@ -1,0 +1,189 @@
+@startuml diagrama-classes-model
+' Diagrama de classes do pacote solidexercicio10.model
+' Missão Marte Unifor - versão refatorada com SOLID
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam class {
+  BackgroundColor #FDFDFD
+  BorderColor #3C4858
+  ArrowColor #3C4858
+}
+hide empty members
+
+package "solidexercicio10.model" {
+
+  interface Posicionavel <<interface>> {
+    +getX(): int
+    +getY(): int
+    +estaEm(x: int, y: int): boolean
+    +estaNaMesmaPosicaoDe(outro: Posicionavel): boolean
+  }
+
+  interface Movel <<interface>> {
+    +mover(direcao: Direcao, limites: Limites): boolean
+  }
+
+  interface FabricaPassageiro <<interface>> {
+    +criar(x: int, y: int): Passageiro
+  }
+
+  abstract class EntidadeMapa {
+    #x: int
+    #y: int
+    +getX(): int
+    +getY(): int
+    +{abstract} getSimbolo(): char
+  }
+
+  abstract class Passageiro {
+    -nome: String
+    -tipo: String
+    +getNome(): String
+    +getTipo(): String
+    +{abstract} getPontuacao(): int
+  }
+
+  class Professor {
+    +getPontuacao(): int
+    +getSimbolo(): char
+  }
+
+  class Engenheiro {
+    +getPontuacao(): int
+    +getSimbolo(): char
+  }
+
+  class Astronauta {
+    +getPontuacao(): int
+    +getSimbolo(): char
+  }
+
+  class Asteroide {
+    +getSimbolo(): char
+  }
+
+  class Inimigo {
+    +mover(direcao: Direcao, limites: Limites): boolean
+    +moverAleatoriamente(random: Random, limites: Limites): void
+    +getSimbolo(): char
+  }
+
+  class Nave {
+    -id: String
+    -capacidade: int
+    -vidas: int
+    +mover(direcao: Direcao, limites: Limites): boolean
+    +embarcar(passageiro: Passageiro): boolean
+    +perderVida(): void
+    +estaDestruida(): boolean
+    +getPassageiros(): List<Passageiro>
+    +getSimbolo(): char
+  }
+
+  class Missao {
+    +{static} PLATAFORMA_X: int
+    +{static} PLATAFORMA_Y: int
+    +verificaColisao(): boolean
+    +moverInimigos(random: Random): void
+    +passageiroNaPosicaoDaNave(): Optional<Passageiro>
+    +embarcarPassageiroNaPosicaoDaNave(): boolean
+    +todosEmbarcados(): boolean
+    +naveNaPlataformaDePouso(): boolean
+    +missaoCumprida(): boolean
+  }
+
+  enum Dificuldade <<enumeration>> {
+    FACIL
+    MEDIO
+    DIFICIL
+    +getPontuacaoInicial(): int
+    +getQuantidadePassageiros(): int
+    +getQuantidadeAsteroides(): int
+    +getQuantidadeInimigos(): int
+    +{static} deString(valor: String): Dificuldade
+  }
+
+  enum Direcao <<enumeration>> {
+    CIMA
+    BAIXO
+    ESQUERDA
+    DIREITA
+    +deltaX(): int
+    +deltaY(): int
+    +{static} doComando(tecla: char): Optional<Direcao>
+  }
+
+  class Limites <<record>> {
+    +minX: int
+    +maxX: int
+    +minY: int
+    +maxY: int
+    +{static} quadrado(tamanho: int): Limites
+    +contem(x: int, y: int): boolean
+  }
+
+  class ResultadoPartida <<record>> {
+    +piloto: String
+    +pontuacaoFinal: int
+    +movimentos: int
+    +tempoSegundos: long
+    +passageirosResgatados: int
+    +vitoria: boolean
+    +elegivelParaRanking(): boolean
+  }
+}
+
+' --- Realizações (implements) ---
+EntidadeMapa ..|> Posicionavel
+Movel --|> Posicionavel
+Nave ..|> Movel
+Inimigo ..|> Movel
+
+' --- Heranças (extends) ---
+Passageiro --|> EntidadeMapa
+Asteroide --|> EntidadeMapa
+Inimigo --|> EntidadeMapa
+Nave --|> EntidadeMapa
+Professor --|> Passageiro
+Engenheiro --|> Passageiro
+Astronauta --|> Passageiro
+
+' --- Associações ---
+Missao "1" *-- "1" Nave : pilotada por >
+Missao "1" o-- "0..*" Passageiro : na superfície >
+Missao "1" *-- "0..*" Asteroide : perigos >
+Missao "1" *-- "0..*" Inimigo : perigos >
+Missao "1" *-- "1" Limites : fronteiras >
+Nave "1" o-- "0..5" Passageiro : a bordo >
+Movel ..> Direcao : usa >
+Movel ..> Limites : valida com >
+FabricaPassageiro ..> Passageiro : cria >
+ResultadoPartida ..> Dificuldade : registra >
+
+note right of Passageiro
+  **LSP**: classe abstrata sem pontuação
+  padrão. Todo subtipo declara o próprio
+  valor e pode substituir a base.
+end note
+
+note right of Movel
+  **LSP/ISP**: os limites do mapa fazem
+  parte da assinatura, então nenhuma
+  implementação pode ignorá-los.
+end note
+
+note bottom of Dificuldade
+  **OCP**: a configuração da partida vive
+  no enum. Uma dificuldade nova é uma
+  constante a mais, sem switch para editar.
+end note
+
+note bottom of FabricaPassageiro
+  **OCP**: o catálogo é montado no Main.
+  Um tipo novo de passageiro não altera
+  o gerador, o serviço nem o renderizador.
+end note
+
+@enduml

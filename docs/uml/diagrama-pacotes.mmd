@@ -1,0 +1,60 @@
+flowchart TB
+    subgraph raiz["solidexercicio10 (raiz)"]
+        Main["Main<br/><i>composition root</i>"]
+    end
+
+    subgraph service["solidexercicio10.service"]
+        JogoService["JogoService"]
+        PartidaService["PartidaService"]
+        GeradorDeMissao["GeradorDeMissao"]
+    end
+
+    subgraph presentation["solidexercicio10.presentation"]
+        Interfaces["EntradaJogo · SaidaJogo<br/>EntradaPartida · SaidaPartida<br/><i>interfaces</i>"]
+        ConsoleUI["ConsoleUI"]
+        MapaRenderer["MapaRenderer"]
+    end
+
+    subgraph repository["solidexercicio10.repository"]
+        RankingRepository["RankingRepository<br/><i>interface</i>"]
+        ArquivoRankingRepository["ArquivoRankingRepository"]
+        MemoriaRankingRepository["MemoriaRankingRepository"]
+        RankingEntry["RankingEntry<br/><i>record</i>"]
+    end
+
+    subgraph model["solidexercicio10.model"]
+        Entidades["Missao · Nave · Passageiro<br/>Asteroide · Inimigo<br/>Dificuldade · Direcao · Limites"]
+    end
+
+    Main --> service
+    Main --> presentation
+    Main -->|escolhe a implementacao| repository
+    Main --> model
+
+    service --> model
+    service -.->|depende das interfaces| Interfaces
+    service -.->|depende do contrato| RankingRepository
+
+    presentation --> model
+    presentation -.->|usa RankingEntry| RankingEntry
+
+    repository --> model
+
+    ConsoleUI -.->|implementa| Interfaces
+    ConsoleUI --> MapaRenderer
+    ArquivoRankingRepository -.->|implementa| RankingRepository
+    MemoriaRankingRepository -.->|implementa| RankingRepository
+    JogoService --> PartidaService
+    PartidaService --> GeradorDeMissao
+
+    classDef raizStyle fill:#eef4ff,stroke:#3c4858
+    classDef serviceStyle fill:#f3f9ee,stroke:#3c4858
+    classDef presentationStyle fill:#fff7e8,stroke:#3c4858
+    classDef repositoryStyle fill:#fdeef4,stroke:#3c4858
+    classDef modelStyle fill:#f4f4f6,stroke:#3c4858
+
+    class Main raizStyle
+    class JogoService,PartidaService,GeradorDeMissao serviceStyle
+    class Interfaces,ConsoleUI,MapaRenderer presentationStyle
+    class RankingRepository,ArquivoRankingRepository,MemoriaRankingRepository,RankingEntry repositoryStyle
+    class Entidades modelStyle
