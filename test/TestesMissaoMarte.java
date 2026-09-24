@@ -54,6 +54,7 @@ public class TestesMissaoMarte {
         testeColisaoComAsteroideEInimigo();
         testeEmbarqueSomenteNaPosicaoDaNave();
         testeRendererUsaSimboloPolimorfico();
+        testeRendererDesenhaPlataformaDePouso();
         testeRendererAceitaTipoNovoSemAlteracao();
         testeRankingEmMemoriaOrdenaEDelimita();
         testeRankingEmArquivoPersisteELimpa();
@@ -190,6 +191,32 @@ public class TestesMissaoMarte {
         checar("Legenda mantém a ordem do original",
                 mapa.contains("Legenda: @=Nave, P=Professor, E=Engenheiro, T=Astronauta,"
                         + " #=Asteroide, X=Inimigo, L=Plataforma de Pouso, .=Vazio"));
+    }
+
+    /**
+     * A plataforma de pouso só aparece quando ninguém ocupa a origem.
+     *
+     * <p>Verificado aqui, e não pelo console, porque no jogo o inimigo anda ao
+     * acaso e pode parar em (0,0), escondendo o 'L' de forma legítima. Com uma
+     * missão montada à mão o resultado é sempre o mesmo.</p>
+     */
+    private static void testeRendererDesenhaPlataformaDePouso() {
+        Missao missao = new Missao(new Nave("A-1", 5), Limites.quadrado(2));
+        MapaRenderer renderer = new MapaRenderer(catalogoPadrao());
+
+        String comNaveNaOrigem = renderer.desenhar(missao, 20, "Arthur");
+        checar("Com a nave na origem, a nave cobre a plataforma",
+                comNaveNaOrigem.contains("  0|  .  .  @  .  ."));
+
+        missao.getNave().mover(Direcao.DIREITA, missao.getLimites());
+        String comNaveFora = renderer.desenhar(missao, 19, "Arthur");
+        checar("Com a nave fora, a plataforma L aparece na origem",
+                comNaveFora.contains("  0|  .  .  L  @  ."));
+
+        missao.addInimigo(new Inimigo(0, 0));
+        String comInimigoNaOrigem = renderer.desenhar(missao, 19, "Arthur");
+        checar("Inimigo parado na origem esconde a plataforma, e isso é esperado",
+                comInimigoNaOrigem.contains("  0|  .  .  X  @  ."));
     }
 
     /** OCP: um tipo novo aparece na legenda sem alterar o renderizador. */

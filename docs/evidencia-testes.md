@@ -5,10 +5,13 @@ repositório. Reproduzível com os comandos do `README.md`.
 
 | Suíte | Verificações | Falhas |
 | --- | ---: | ---: |
-| Unidade (`TestesMissaoMarte`) | 71 | 0 |
+| Unidade (`TestesMissaoMarte`) | 74 | 0 |
 | Integração do console (`TesteIntegracaoConsole`) | 17 | 0 |
-| Funcional do jogo (`teste-funcional.sh`) | 69 | 0 |
-| **Total** | **157** | **0** |
+| Funcional do jogo (`teste-funcional`) | 68 | 0 |
+| **Total** | **159** | **0** |
+
+O teste funcional tem duas versões equivalentes, `teste-funcional.ps1` para
+PowerShell e `teste-funcional.sh` para bash, com os mesmos 68 cenários.
 
 ## 1. Testes de unidade
 
@@ -56,6 +59,9 @@ java -cp "out-solid;out-test" TestesMissaoMarte
   ok   Mapa mostra a pontuação recebida
   ok   Mapa mostra o piloto recebido
   ok   Legenda mantém a ordem do original
+  ok   Com a nave na origem, a nave cobre a plataforma
+  ok   Com a nave fora, a plataforma L aparece na origem
+  ok   Inimigo parado na origem esconde a plataforma, e isso é esperado
   ok   Tipo novo aparece na legenda sem tocar no MapaRenderer
   ok   Tipo novo é desenhado no mapa
   ok   Top respeita o limite pedido
@@ -89,7 +95,7 @@ java -cp "out-solid;out-test" TestesMissaoMarte
   ok   Resultado entrou no ranking
   ok   Ranking guardou a pontuação da partida
 
-71 verificações, 0 falha(s).
+74 verificações, 0 falha(s).
 TODOS OS TESTES PASSARAM
 ```
 
@@ -142,7 +148,7 @@ Parabéns! Você entrou para o Top 5 de pilotos!
 ----------------------
 Escolha uma opção: 
 ====== RANKING TOP 5 PILOTOS ======
-1. Arthur - 66 pts | Dificuldade: Fácil | Coletados: 4 | Tempo: 0s | 2026-09-24 17:00:31
+1. Arthur - 66 pts | Dificuldade: Fácil | Coletados: 4 | Tempo: 0s | 2026-09-24 17:43:14
 ===================================
 
 --- MENU PRINCIPAL ---
@@ -154,7 +160,7 @@ Escolha uma opção:
 Escolha uma opção: 
 Obrigado por jogar a Missão Marte Unifor!
 Conteúdo do arquivo de ranking:
-  [{"name":"Arthur","score":66,"dificuldade":"FACIL","passageirosColetados":4,"dataHora":"2026-09-24 17:00:31","tempoJogo":0}]
+  [{"name":"Arthur","score":66,"dificuldade":"FACIL","passageirosColetados":4,"dataHora":"2026-09-24 17:43:14","tempoJogo":0}]
 
 17 verificações, 0 falha(s).
 INTEGRACAO OK
@@ -162,11 +168,10 @@ INTEGRACAO OK
 
 ## 3. Teste funcional do jogo
 
-Roda o console de verdade com entrada roteirizada e confere a saída, cobrindo
-menu, ranking, reset, as três dificuldades, entradas inválidas, os comandos da
-partida, o encerramento e a robustez do arquivo.
+Roda o console de verdade com entrada roteirizada e confere a saída.
 
 ```
+powershell -ExecutionPolicy Bypass -File test\teste-funcional.ps1
 bash test/teste-funcional.sh
 ```
 
@@ -245,7 +250,6 @@ bash test/teste-funcional.sh
   ok    abortar com q
   ok    mover para a direita custa 1 ponto
   ok    nave foi para (1,0)
-  ok    plataforma L aparece quando a nave sai
   ok    mover para baixo aumenta y
   ok    mover para cima diminui y
   ok    mover para a esquerda diminui x
@@ -268,6 +272,6 @@ bash test/teste-funcional.sh
   ok    arquivo inexistente nao quebra
 
 ================================================
-69 verificacoes, 0 falha(s).
+68 verificacoes, 0 falha(s).
 TESTE FUNCIONAL PASSOU
 ```

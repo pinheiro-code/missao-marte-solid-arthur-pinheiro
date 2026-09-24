@@ -14,7 +14,7 @@ mudar quem é responsável por cada coisa.
 | Classe de entrada | `exercicio10.Main` | `solidexercicio10.Main` |
 | Linhas na `Main` | 557 (472 efetivas) | 60 (21 efetivas) |
 | Arquivos | 10 | 30 |
-| Testes automatizados | nenhum | 157 verificações |
+| Testes automatizados | nenhum | 159 verificações |
 
 ---
 
@@ -77,31 +77,40 @@ java -cp "out-solid;out-test" TestesMissaoMarte
 java -cp "out-solid;out-test" TesteIntegracaoConsole
 ```
 
-E o teste funcional, que joga o jogo pelo console de verdade:
+E o teste funcional, que joga o jogo pelo console de verdade. No PowerShell:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File test\teste-funcional.ps1
+```
+
+No bash (Git Bash, Linux ou macOS):
 
 ```bash
 bash test/teste-funcional.sh
 ```
 
+As duas versões rodam os mesmos 68 cenários. O `.ps1` existe para não depender de
+bash no Windows.
+
 No Linux ou macOS, troque o `;` do classpath por `:`. Os três terminam com código de
 saída 1 se alguma verificação falhar. A saída completa das três está em
 [`docs/evidencia-testes.md`](docs/evidencia-testes.md).
 
-- `TestesMissaoMarte`: **71 verificações**. Cobre pontuação por tipo de passageiro,
+- `TestesMissaoMarte`: **74 verificações**. Cobre pontuação por tipo de passageiro,
   capacidade da nave, limites de movimento, colisão, embarque, renderização do mapa,
   as duas implementações de ranking e uma **partida inteira até a vitória**, jogada
   por um piloto automático, sem console e sem disco.
 - `TesteIntegracaoConsole`: **17 verificações**. Monta o jogo exatamente como o
   `Main` faz (`ConsoleUI` de verdade, arquivo de verdade) e percorre menu, partida,
   vitória, estatísticas, ranking e saída, conferindo o JSON gravado em disco.
-- `teste-funcional.sh`: **69 cenários**. Executa o jogo pelo console com entrada
+- `teste-funcional`: **68 cenários**. Executa o jogo pelo console com entrada
   roteirizada e confere a saída: menu e opções inválidas, ranking vazio e com dados,
   corte no Top 5, reset confirmado e cancelado, as três dificuldades com e sem acento,
   tamanhos de mapa inválidos, o ajuste de mapa pequeno demais, o desenho do mapa e a
   legenda, todos os comandos da partida, o bloqueio na borda, o encerramento por
   pontuação zerada e a robustez do arquivo de ranking.
 
-Somando as três: **157 verificações, 0 falhas**.
+Somando as três: **159 verificações, 0 falhas**.
 
 ---
 
