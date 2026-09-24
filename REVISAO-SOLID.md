@@ -16,7 +16,11 @@
 | Compilação dos testes | `javac -encoding UTF-8 -cp out-solid -d out-test test/*.java` | sem erros |
 | Testes de unidade | `java -cp "out-solid;out-test" TestesMissaoMarte` | **71 verificações, 0 falhas** |
 | Teste de integração | `java -cp "out-solid;out-test" TesteIntegracaoConsole` | **17 verificações, 0 falhas** |
+| Teste funcional do jogo | `bash test/teste-funcional.sh` | **69 cenários, 0 falhas** |
 | Determinismo | suíte executada 3 vezes seguidas | mesmo resultado nas 3 |
+| **Total** | | **157 verificações, 0 falhas** |
+
+A saída completa das três está em [`docs/evidencia-testes.md`](docs/evidencia-testes.md).
 
 ### Checklist manual, item a item
 
@@ -83,7 +87,7 @@ Observação: a classe original tinha seis motivos independentes para mudar: flu
   GeradorDeMissao, ArquivoRankingRepository e ConsoleUI.
 Impacto para manutenção, testes ou evolução: com tudo junto, não havia como exercitar
   uma regra sem console e sem disco, e por isso o projeto não tinha nenhum teste.
-  Depois da separação, 88 verificações automatizadas passaram a rodar em menos de um
+  Depois da separação, 157 verificações automatizadas passaram a rodar em menos de um
   segundo.
 Proposta: implementado.
 Prioridade: alta (feito)
@@ -476,7 +480,7 @@ Observação: a pergunta orientadora "a arquitetura proposta está adequada ao t
   uma resolve, e o critério foi esse: se eu não conseguia nomear o que quebrava sem a
   abstração, ela não entrou.
 Impacto para manutenção, testes ou evolução: o ponto em que a estrutura se paga é o
-  teste. São 88 verificações automatizadas que não existiam e não poderiam existir no
+  teste. São 157 verificações automatizadas que não existiam e não poderiam existir no
   código original. O ponto em que ela cobra o preço é a navegação: entender o fluxo de
   uma partida hoje exige abrir quatro arquivos em vez de um.
 Proposta: se o projeto parasse aqui e nunca mais mudasse, parte dessa estrutura seria

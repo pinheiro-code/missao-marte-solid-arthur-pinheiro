@@ -14,7 +14,7 @@ mudar quem é responsável por cada coisa.
 | Classe de entrada | `exercicio10.Main` | `solidexercicio10.Main` |
 | Linhas na `Main` | 557 (472 efetivas) | 60 (21 efetivas) |
 | Arquivos | 10 | 30 |
-| Testes automatizados | nenhum | 88 verificações |
+| Testes automatizados | nenhum | 157 verificações |
 
 ---
 
@@ -77,8 +77,15 @@ java -cp "out-solid;out-test" TestesMissaoMarte
 java -cp "out-solid;out-test" TesteIntegracaoConsole
 ```
 
-No Linux ou macOS, troque o `;` do classpath por `:`. Os dois programas terminam com
-código de saída 1 se alguma verificação falhar.
+E o teste funcional, que joga o jogo pelo console de verdade:
+
+```bash
+bash test/teste-funcional.sh
+```
+
+No Linux ou macOS, troque o `;` do classpath por `:`. Os três terminam com código de
+saída 1 se alguma verificação falhar. A saída completa das três está em
+[`docs/evidencia-testes.md`](docs/evidencia-testes.md).
 
 - `TestesMissaoMarte`: **71 verificações**. Cobre pontuação por tipo de passageiro,
   capacidade da nave, limites de movimento, colisão, embarque, renderização do mapa,
@@ -87,6 +94,14 @@ código de saída 1 se alguma verificação falhar.
 - `TesteIntegracaoConsole`: **17 verificações**. Monta o jogo exatamente como o
   `Main` faz (`ConsoleUI` de verdade, arquivo de verdade) e percorre menu, partida,
   vitória, estatísticas, ranking e saída, conferindo o JSON gravado em disco.
+- `teste-funcional.sh`: **69 cenários**. Executa o jogo pelo console com entrada
+  roteirizada e confere a saída: menu e opções inválidas, ranking vazio e com dados,
+  corte no Top 5, reset confirmado e cancelado, as três dificuldades com e sem acento,
+  tamanhos de mapa inválidos, o ajuste de mapa pequeno demais, o desenho do mapa e a
+  legenda, todos os comandos da partida, o bloqueio na borda, o encerramento por
+  pontuação zerada e a robustez do arquivo de ranking.
+
+Somando as três: **157 verificações, 0 falhas**.
 
 ---
 
@@ -241,9 +256,10 @@ As cinco estão descritas com proposta de solução e prioridade no `REVISAO-SOL
 | --- | --- |
 | [`REVISAO-SOLID.md`](REVISAO-SOLID.md) | revisão crítica: achados por princípio, melhorias, concordâncias e discordâncias com o tutorial, testes e prioridades |
 | [`docs/analise-inicial.md`](docs/analise-inicial.md) | análise do código original feita antes da refatoração, com a lista de comportamento a preservar |
+| [`docs/evidencia-testes.md`](docs/evidencia-testes.md) | saída completa das três suítes de teste |
 | [`docs/uml/`](docs/uml) | os dois diagramas, em `.puml`, `.mmd`, `.png` e `.svg` |
 | [`src/exercicio10/`](src/exercicio10) | código inicial preservado, sem alteração |
 | [`src/solidexercicio10/`](src/solidexercicio10) | versão refatorada |
-| [`test/`](test) | testes automatizados |
+| [`test/`](test) | testes automatizados e o roteiro funcional do console |
 | [`src/README.md`](src/README.md) | tutorial original do professor |
 | [`apostilas-solid/`](apostilas-solid) | apostilas de apoio sobre cada princípio |
