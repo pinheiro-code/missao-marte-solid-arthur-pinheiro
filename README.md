@@ -63,17 +63,26 @@ comparação.
 
 O jogo imprime texto com acento. No Windows, a JVM escreve no console usando a página
 de código do sistema (`Cp1252` por padrão), e não UTF-8, mesmo com `-Dfile.encoding`.
-Se os acentos saírem como `?`, rode antes:
+Se os acentos saírem errados, o console e a JVM estão em codificações diferentes.
+
+A linha abaixo alinha as duas em UTF-8 e roda o jogo. **Testada no Windows 11 com
+PowerShell 5.1 e JDK 25:**
 
 ```powershell
-chcp 65001
+chcp 65001; [Console]::OutputEncoding = [System.Text.Encoding]::UTF8; java "-Dstdout.encoding=UTF-8" -cp out-solid solidexercicio10.Main
 ```
 
-e acrescente a flag **entre aspas**, que é obrigatório no PowerShell, senão ele quebra
-o argumento no ponto:
+Duas armadilhas nessa linha:
+
+- as **aspas** em volta de `-Dstdout.encoding=UTF-8` são obrigatórias no PowerShell.
+  Sem elas o parser quebra o argumento no ponto e o `java` nem inicia;
+- o `chcp` sozinho não basta, porque ele muda só quem lê. A flag muda quem escreve.
+
+Se preferir o caminho inverso, alinhando as duas pontas em `Cp1252` em vez de UTF-8,
+funciona igual e sem flag nenhuma:
 
 ```powershell
-java "-Dstdout.encoding=UTF-8" -cp out-solid solidexercicio10.Main
+chcp 1252; java -cp out-solid solidexercicio10.Main
 ```
 
 O mesmo vale para o jogo original e para os testes. É configuração de terminal, não do
