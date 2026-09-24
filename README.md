@@ -59,6 +59,26 @@ As duas gravam o ranking em arquivos **separados** (`ranking-solid-exercicio10.j
 `ranking.json`), de propósito, para que rodar uma não interfira na outra durante a
 comparação.
 
+### Acentos no Windows
+
+O jogo imprime texto com acento. No Windows, a JVM escreve no console usando a página
+de código do sistema (`Cp1252` por padrão), e não UTF-8, mesmo com `-Dfile.encoding`.
+Se os acentos saírem como `?`, rode antes:
+
+```powershell
+chcp 65001
+```
+
+e acrescente a flag **entre aspas**, que é obrigatório no PowerShell, senão ele quebra
+o argumento no ponto:
+
+```powershell
+java "-Dstdout.encoding=UTF-8" -cp out-solid solidexercicio10.Main
+```
+
+O mesmo vale para o jogo original e para os testes. É configuração de terminal, não do
+código: o jogo original se comporta exatamente igual.
+
 Comandos dentro da partida: `w` `a` `s` `d` para mover, `c` para embarcar o passageiro
 que estiver sob a nave, `q` para abortar. A missão só termina quando todos os
 passageiros estiverem a bordo **e** a nave voltar à plataforma `L` em (0,0).
