@@ -23,23 +23,32 @@ mudar quem é responsável por cada coisa.
 Requer **JDK 17 ou superior** (testado no JDK 25). Não há Maven nem Gradle: é
 `javac` puro, rodando na raiz do repositório.
 
-**Versão refatorada:**
+### No Windows (PowerShell)
 
-```bash
-javac -encoding UTF-8 -d out-solid $(find src/solidexercicio10 -name "*.java")
-```
-
-No PowerShell, onde `find` não existe:
+Versão refatorada:
 
 ```powershell
 javac -encoding UTF-8 -d out-solid (Get-ChildItem -Recurse src\solidexercicio10\*.java | % FullName)
 ```
 
-**Código inicial, para comparação:**
+Código inicial, para comparação:
+
+```powershell
+javac -encoding UTF-8 -d out src\exercicio10\*.java
+```
+
+### No bash (Git Bash, Linux ou macOS)
+
+```bash
+javac -encoding UTF-8 -d out-solid $(find src/solidexercicio10 -name "*.java")
+```
 
 ```bash
 javac -encoding UTF-8 -d out src/exercicio10/*.java
 ```
+
+> O comando com `find` **não funciona no PowerShell**, porque `find` ali é outro
+> programa e `$( )` não é substituição de comando. Use o bloco do PowerShell acima.
 
 ## Como executar
 
@@ -94,35 +103,49 @@ passageiros estiverem a bordo **e** a nave voltar à plataforma `L` em (0,0).
 
 ## Como rodar os testes
 
-```bash
-javac -encoding UTF-8 -cp out-solid -d out-test test/*.java
+Compile os testes, depois de já ter compilado a versão refatorada:
+
+```powershell
+javac -encoding UTF-8 -cp out-solid -d out-test test\*.java
 ```
 
-```bash
+### No Windows (PowerShell)
+
+```powershell
 java -cp "out-solid;out-test" TestesMissaoMarte
 ```
 
-```bash
+```powershell
 java -cp "out-solid;out-test" TesteIntegracaoConsole
 ```
-
-E o teste funcional, que joga o jogo pelo console de verdade. No PowerShell:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File test\teste-funcional.ps1
 ```
 
-No bash (Git Bash, Linux ou macOS):
+### No Linux ou macOS
+
+O separador do classpath é `:` em vez de `;`.
+
+```bash
+java -cp "out-solid:out-test" TestesMissaoMarte
+```
+
+```bash
+java -cp "out-solid:out-test" TesteIntegracaoConsole
+```
 
 ```bash
 bash test/teste-funcional.sh
 ```
 
-As duas versões rodam os mesmos 68 cenários. O `.ps1` existe para não depender de
-bash no Windows.
+> No **Git Bash rodando no Windows** o separador continua sendo `;`, porque quem lê o
+> classpath é a JVM do Windows, não o shell. Use as linhas do bloco do PowerShell,
+> trocando só o `powershell -File ...` por `bash test/teste-funcional.sh`.
 
-No Linux ou macOS, troque o `;` do classpath por `:`. Os três terminam com código de
-saída 1 se alguma verificação falhar. A saída completa das três está em
+O teste funcional tem duas versões com os mesmos 68 cenários. O `.ps1` existe para
+não depender de bash no Windows. Os três terminam com código de saída 1 se alguma
+verificação falhar. A saída completa das três está em
 [`docs/evidencia-testes.md`](docs/evidencia-testes.md).
 
 - `TestesMissaoMarte`: **74 verificações**. Cobre pontuação por tipo de passageiro,
