@@ -206,8 +206,17 @@ docs/                          análise inicial e diagramas
 
 ## Diagramas UML
 
-Os arquivos-fonte estão em `docs/uml/`, em **PlantUML** (`.puml`) e em **Mermaid**
-(`.mmd`), com as imagens em `.png` e `.svg` geradas a partir do Mermaid.
+Os dois diagramas foram escritos **como código**, não desenhados à mão, e cada um vem
+em dois formatos de fonte, para que possam ser revisados e atualizados:
+
+| Formato | Arquivo | Como abrir e editar |
+| --- | --- | --- |
+| **Mermaid** | `.mmd` | cole o conteúdo em [mermaid.live](https://mermaid.live), ou use a extensão *Markdown Preview Mermaid Support* no VS Code |
+| **PlantUML** | `.puml` | cole em [plantuml.com/plantuml](https://www.plantuml.com/plantuml/uml/), ou use a extensão *PlantUML* no VS Code |
+
+As imagens `.png` e `.svg` foram geradas a partir dos arquivos Mermaid. Alterar o
+diagrama é editar o `.mmd` ou o `.puml` e gerar a imagem de novo, sem precisar
+redesenhar nada.
 
 ### Diagrama de classes do domínio
 
