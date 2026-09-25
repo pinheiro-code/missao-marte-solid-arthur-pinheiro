@@ -514,7 +514,45 @@ conserto confinado a uma classe só.
 
 ---
 
-## 7. Limitações conhecidas
+## 7. Extensão opcional do tutorial
+
+O tutorial (`src/README.md`, seção "Extensão opcional") sugere implementar **uma** das
+melhorias identificadas na revisão, e dá três exemplos. As três estão implementadas.
+
+### "Trocar a persistência por uma implementação em memória para testes"
+
+`MemoriaRankingRepository` existe e é usada nos testes.
+
+**Antes:** `Main` original, linha 26, com o caminho do arquivo fixo em constante
+estática, e `loadRanking`/`saveRanking` chamados de dentro do laço da partida. Não
+havia como rodar a regra do ranking sem escrever em disco.
+
+**Depois:** `JogoService` recebe `RankingRepository` pelo construtor. A escolha entre
+arquivo e memória é uma linha do `Main`, e `testeRankingEmMemoriaOrdenaEDelimita()`
+exercita a regra sem tocar no sistema de arquivos.
+
+### "Separar a entrada do usuário da orquestração do jogo"
+
+**Antes:** `jogarPartida` no original lia do `Scanner` e decidia o resultado da jogada
+no mesmo laço, intercalando `lerLinha` com as regras de colisão e pontuação.
+
+**Depois:** `PartidaService` recebe `EntradaPartida` e `SaidaPartida` e não conhece
+`Scanner` nem `System.out`. É o que permite o `PilotoAutomatico` dos testes jogar uma
+partida inteira até a vitória, sem console.
+
+### "Eliminar uma dependência concreta desnecessária"
+
+**Antes:** `MapaRenderer` (no tutorial) e `desenharMapa` (no original) decidiam o
+símbolo com `instanceof Engenheiro` / `instanceof Astronauta`, ou seja, a apresentação
+dependia das classes concretas de passageiro.
+
+**Depois:** cada entidade responde `getSimbolo()`. O renderizador não cita nenhum tipo
+concreto, e `testeRendererAceitaTipoNovoSemAlteracao()` prova isso criando um tipo
+"Médico" dentro do próprio teste.
+
+---
+
+## 8. Limitações conhecidas
 
 1. **Sem tratamento de concorrência no arquivo de ranking.** Duas instâncias do jogo
    abertas ao mesmo tempo podem sobrescrever o registro uma da outra. O original tem
